@@ -1,0 +1,191 @@
+# Generated 2022-01-19 from:
+# /scratch/elec/t405-puhe/p/porjazd1/Metadata_Classification/TCN/asr_topic_speechbrain/mgb_asr/hyperparams.yaml
+# yamllint disable
+# Seed needs to be set at top of yaml, before objects with parameters are made
+seed: 1234
+__set_seed: !apply:torch.manual_seed [1234]
+
+skip_training: True
+
+output_folder: output_folder
+topic_encoder_file: !ref <output_folder>/topic_encoder.txt
+
+train_log: !ref <output_folder>/train_log.txt
+train_logger: !new:speechbrain.utils.train_logger.FileTrainLogger
+  save_file: !ref <output_folder>/train_log.txt
+
+
+wer_file: !ref <output_folder>/wer_test.txt
+cer_file: !ref <output_folder>/cer_test.txt
+
+decode_text_file: !ref <output_folder>/text_test.txt
+
+# Feature parameters
+sample_rate: 22050
+n_fft: 800
+n_mels: 40
+
+
+# Training params
+N_epochs: 50
+number_of_ctc_epochs: 20
+dataloader_options:
+  batch_size: 8
+  shuffle: false
+
+test_dataloader_options:
+  batch_size: 10
+  shuffle: false
+
+label_smoothing: 0.1
+lr: 0.0005
+
+
+# Special tokens and labels
+#blank_index: 0
+#bos_index: 0
+#eos_index: 0
+#unk_index: 0
+
+
+tokenizer: !new:sentencepiece.SentencePieceProcessor
+  model_file: !ref <output_folder>/tokenizer/1000_unigram.model
+
+
+topic_encoder: !new:speechbrain.dataio.encoder.CategoricalEncoder
+
+
+# Model parameters
+#dropout: 0.15
+#dnn_neurons: 1024
+#emb_size: 128
+#output_neurons: 1000
+#dec_neurons: 512
+#kernel_size: 6
+
+attn_dim: 512
+activation: !name:torch.nn.LeakyReLU
+dropout: 0.15
+cnn_blocks: 2
+cnn_channels: (64, 128)
+inter_layer_pooling_size: (2, 2)
+cnn_kernelsize: (3, 3)
+time_pooling_size: 4
+rnn_class: !name:speechbrain.nnet.RNN.LSTM
+rnn_layers: 3
+rnn_neurons: 512
+rnn_bidirectional: True
+dnn_blocks: 1
+dnn_neurons: 512
+bert_embedding_size: 768
+emb_size: 128
+dec_neurons: 512
+output_neurons: 1000
+num_topics: 10
+ctc_weight: 0.5
+blank_index: 0
+bos_index: 0
+eos_index: 0
+unk_index: 0
+
+
+# Decoding parameters
+min_decode_ratio: 0.0
+max_decode_ratio: 0.8
+valid_beam_size: 4
+test_beam_size: 10
+eos_threshold: 1.3
+using_max_attn_shift: False
+max_attn_shift: 240
+ctc_weight_decode: 0.0
+coverage_penalty: 4.0
+temperature: 1.25
+
+
+compute_features: !new:speechbrain.lobes.features.Fbank
+  sample_rate: !ref <sample_rate>
+  n_fft: !ref <n_fft>
+  n_mels: !ref <n_mels>
+
+
+# Feature normalization (mean and std)
+normalizer: !new:speechbrain.processing.features.InputNormalization
+    norm_type: global
+
+
+  # The CRDNN model is an encoder that combines CNNs, RNNs, and DNNs.
+encoder: !new:speechbrain.lobes.models.CRDNN.CRDNN
+  input_shape: [null, null, !ref <n_mels>]
+  activation: !ref <activation>
+  dropout: !ref <dropout>
+  cnn_blocks: !ref <cnn_blocks>
+  cnn_channels: !ref <cnn_channels>
+  cnn_kernelsize: !ref <cnn_kernelsize>
+  inter_layer_pooling_size: !ref <inter_layer_pooling_size>
+  time_pooling: True
+  using_2d_pooling: False
+  time_pooling_size: !ref <time_pooling_size>
+  rnn_class: !ref <rnn_class>
+  rnn_layers: !ref <rnn_layers>
+  rnn_neurons: !ref <rnn_neurons>
+  rnn_bidirectional: !ref <rnn_bidirectional>
+  rnn_re_init: True
+  dnn_blocks: !ref <dnn_blocks>
+  dnn_neurons: !ref <dnn_neurons>
+  use_rnnp: False
+
+
+          #encoder: !new:model.TemporalConvNet
+          #        num_inputs: !ref <n_mels>
+          #        num_channels: [!ref <dnn_neurons>, !ref <dnn_neurons>, !ref <dnn_neurons>, !ref <dnn_neurons>, !ref <dnn_neurons>, !ref <dnn_neurons>, !ref <dnn_neurons>]
+          #        num_classes: !ref <output_neurons>
+          #        kernel_size: 4
+          #        dropout: !ref <dropout>
+
+
+
+topic_lin: !new:speechbrain.nnet.linear.Linear
+  input_size: !ref <dnn_neurons>
+  n_neurons: !ref <num_topics>
+
+
+log_softmax: !new:speechbrain.nnet.activations.Softmax
+  apply_log: true
+
+
+opt_class: !name:torch.optim.Adam
+  lr: !ref <lr>
+
+
+lr_annealing: !new:speechbrain.nnet.schedulers.NewBobScheduler
+  initial_value: !ref <lr>
+  improvement_threshold: 0.0025
+  annealing_factor: 0.8
+  patient: 1000
+
+epoch_counter: !new:speechbrain.utils.epoch_loop.EpochCounter
+  limit: 100
+
+
+# Functions that compute the statistics to track during the validation step.
+accuracy_computer: !name:speechbrain.utils.Accuracy.AccuracyStats
+
+
+modules:
+  encoder: !ref <encoder>
+  topic_lin: !ref <topic_lin>
+  normalizer: !ref <normalizer>
+
+
+model: !new:torch.nn.ModuleList
+    - - !ref <encoder>
+      - !ref <topic_lin>
+
+
+checkpointer: !new:speechbrain.utils.checkpoints.Checkpointer
+  checkpoints_dir: !ref <output_folder>
+  recoverables:
+    model: !ref <model>
+    scheduler: !ref <lr_annealing>
+    normalizer: !ref <normalizer>
+    counter: !ref <epoch_counter>
