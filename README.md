@@ -14,4 +14,5 @@ To run the experiments, you will need the following dependencies:
 3. [HyperPyYAML](https://pypi.org/project/HyperPyYAML/)
 4. [JiWER](https://pypi.org/project/jiwer/)
 
-To execute a recipe, you need to run the `train` and `hyperparams` files, for example `python ctc_aed_train.py ctc_aed_hyperparams.yaml`
+To execute a recipe, you need to run the `train` and `hyperparams` files, for example:
+`python ctc_aed_train.py ctc_aed_hyperparams.yaml`
