@@ -7,4 +7,4 @@ The models are implemented using the SpeechBrain toolkit and the recipes are ava
 An overview of the explored Topic ID systems is given in the figure below:
 ![Overview of the explored systems](topic_id_systems.png?raw=true "Title" width="44")
 
-<img src="topic_id_systems.png" width="200" height="200">
+<img src="topic_id_systems.png" width="800" height="600">
