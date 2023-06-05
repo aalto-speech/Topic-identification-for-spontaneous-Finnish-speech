@@ -11,3 +11,7 @@ An overview of the explored Topic ID systems is given in the figure below:
 To run the experiments, you will need the following dependencies:
 1. [SpeechBrain](https://speechbrain.github.io)
 2. [Sklearn](https://scikit-learn.org/stable/)
+3. [HyperPyYAML](https://pypi.org/project/HyperPyYAML/)
+4. [JiWER](https://pypi.org/project/jiwer/)
+
+To execute a recipe, you need to run the `train` and `hyperparams` files, for example `python ctc_aed_train.py ctc_aed_hyperparams.yaml`
