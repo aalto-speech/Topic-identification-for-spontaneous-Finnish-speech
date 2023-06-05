@@ -5,4 +5,4 @@ Implementation of the approaches used in the paper: "Topic identification for sp
 The models are implemented using the SpeechBrain toolkit and the recipes are available in the subdirectories.
 
 An overview of the explored Topic ID systems is given in the figure below:
-![Overview of the explored systems](topic_id_systems.png?raw=true "Title" =200x200)
+![Overview of the explored systems](topic_id_systems.png? =200x200)
