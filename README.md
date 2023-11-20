@@ -19,6 +19,8 @@ To execute a recipe, you need to run the `train` and `hyperparams` files, for ex
 `python ctc_aed_train.py ctc_aed_hyperparams.yaml`
 
 
+The pre-trained models can be obtained from: https://zenodo.org/records/10158851
+
 Cite the paper:
 
 
