@@ -21,7 +21,5 @@ To execute a recipe, you need to run the `train` and `hyperparams` files, for ex
 
 Cite the paper:
 
-`
-Porjazovski, D., Grósz, T., & Kurimo, M. (2023). Topic Identification for Spontaneous Speech: Enriching Audio Features with Embedded Linguistic Information. In *2023 31st European Signal Processing Conference (EUSIPCO)* (pp. 396–400). IEEE.
 
-`
+`Porjazovski, D., Grósz, T., & Kurimo, M. (2023). Topic Identification for Spontaneous Speech: Enriching Audio Features with Embedded Linguistic Information. In *2023 31st European Signal Processing Conference (EUSIPCO)* (pp. 396–400). IEEE.`
