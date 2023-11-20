@@ -20,13 +20,21 @@ To execute a recipe, you need to run the `train` and `hyperparams` files, for ex
 
 
 Cite the paper:
+
 `
 @inproceedings{porjazovski2023topic,
+
   title={Topic Identification for Spontaneous Speech: Enriching Audio Features with Embedded Linguistic Information},
+
   author={Porjazovski, Dejan and Gr{\'o}sz, Tam{\'a}s and Kurimo, Mikko},
+
   booktitle={2023 31st European Signal Processing Conference (EUSIPCO)},
+
   pages={396--400},
+
   year={2023},
+
   organization={IEEE}
-}n
+
+}
 `
